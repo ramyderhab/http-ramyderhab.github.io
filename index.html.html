@@ -1,0 +1,84 @@
+```html
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MAGRABIGIS - خريطة المزرعة</title>
+  <style>
+    body { font-family: Arial, sans-serif; direction: rtl; padding: 20px; }
+    #map { width: 100%; height: 500px; margin-bottom: 20px; }
+    .info { background: #f9f9f9; padding: 10px; border: 1px solid #ddd; }
+  </style>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD6YJ1cqkWtFvPbaT9p0JXHQ5piR-4yAi8"></script>
+</head>
+<body>
+  <h1>خريطة المزرعة</h1>
+  <div id="map"></div>
+  <div class="info" id="info">اضغط على قطعة الأرض لمعرفة التفاصيل</div>
+
+  <script>
+    const plots = [
+      {
+        name: "قطعة 1",
+        crop: "موالح",
+        plantDate: "2025-01-15",
+        irrigation: "مرة كل 3 أيام",
+        spraying: "رش مبيد حشري 2025-02-01",
+        coords: [
+          {lat: 30.0444, lng: 31.2357},
+          {lat: 30.0445, lng: 31.2365},
+          {lat: 30.0439, lng: 31.2367},
+          {lat: 30.0438, lng: 31.2358}
+        ]
+      },
+      {
+        name: "قطعة 2",
+        crop: "عنب",
+        plantDate: "2025-02-01",
+        irrigation: "مرة كل 4 أيام",
+
+        spraying: "رش مبيد فطري 2025-03-01",
+        coords: [
+          {lat: 30.0450, lng: 31.2370},
+          {lat: 30.0452, lng: 31.2380},
+          {lat: 30.0446, lng: 31.2382},
+          {lat: 30.0445, lng: 31.2372}
+        ]
+      }
+    ];
+
+    let map;
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 16,
+        center: {lat: 30.0444, lng: 31.2357}
+      });
+
+      plots.forEach(plot => {
+        const polygon = new google.maps.Polygon({
+          paths: plot.coords,
+          strokeColor: "#FF0000",
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: "#FF6347",
+          fillOpacity: 0.35
+        });
+        polygon.setMap(map);
+
+        polygon.addListener("click", () => {
+          document.getElementById("info").innerHTML = `
+            <h3>plot.name</h3>
+            <p>المحصول:{plot.crop}</p>
+            <p>تاريخ الزراعة: plot.plantDate</p>
+            <p>الري:{plot.irrigation}</p>
+            <p>الرش: ${plot.spraying}</p>
+          `;
+        });
+      });
+    }
+
+    window.onload = initMap;
+  </script>
+</body>
+</html>
