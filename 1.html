@@ -37,4 +37,48 @@
         crop: "عنب",
         plantDate: "2025-02-01",
         irrigation: "مرة كل 4 أيام",
+
         spraying: "رش مبيد فطري 2025-03-01",
+        coords: [
+          {lat: 30.0450, lng: 31.2370},
+          {lat: 30.0452, lng: 31.2380},
+          {lat: 30.0446, lng: 31.2382},
+          {lat: 30.0445, lng: 31.2372}
+        ]
+      }
+    ];
+
+    let map;
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 16,
+        center: {lat: 30.0444, lng: 31.2357}
+      });
+
+      plots.forEach(plot => {
+        const polygon = new google.maps.Polygon({
+          paths: plot.coords,
+          strokeColor: "#FF0000",
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: "#FF6347",
+          fillOpacity: 0.35
+        });
+        polygon.setMap(map);
+
+        polygon.addListener("click", () => {
+          document.getElementById("info").innerHTML = `
+            <h3>plot.name</h3>
+            <p>المحصول:{plot.crop}</p>
+            <p>تاريخ الزراعة: plot.plantDate</p>
+            <p>الري:{plot.irrigation}</p>
+            <p>الرش: ${plot.spraying}</p>
+          `;
+        });
+      });
+    }
+
+    window.onload = initMap;
+  </script>
+</body>
+</html>
